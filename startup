@@ -1,0 +1,43 @@
+#!/bin/bash
+# startup.sh
+
+# colors
+RED='\033[0;31m'
+NC='\033[0m'
+GREEN='\033[1;32m'
+BLUE='\033[1;34m'
+ORANGE=''
+
+mainmenu () {
+    echo ""
+    echo -e "\t${GREEN}[1]:${NC}\tShow failed services"
+    echo -e "\t${GREEN}[2]:${NC}\tShow log files"
+    echo -e "\t${GREEN}[q]:${NC}\tExit & enjoy"
+    echo ""
+    read -n 1 -p "  Input Selection:    " mainmenuinput
+    if [ "$mainmenuinput" = "1" ]; then
+        systemctl --failed;
+        echo ""
+        mainmenu
+    elif [ "$mainmenuinput" = "2" ]; then
+        journalctl -p 3 -b;
+        echo ""
+        mainmenu
+    elif [ "$mainmenuinput" = "q" ];then
+        echo ""
+        exit 0;
+    else
+        echo "You have entered an invallid selection!"
+        echo "Please try again!"
+        mainmenu
+    fi
+}
+
+cat ~/.config/startup/brrsrch.txt
+echo ""
+echo -e "\t\tHello ${BLUE}$USER${NC}!"
+echo -e "\t\t${RED} Date:${NC}\t$(date)"
+echo -e "\t\t${RED}󰈀 IPv4:${NC}\t$(ip -o route get to 8.8.8.8 | sed -n 's/.*src \([0-9.]\+\).*/\1/p')"
+echo -e "\t\t${RED}󰕒 PKGS:${NC}\t$(checkupdates)"
+mainmenu
+
